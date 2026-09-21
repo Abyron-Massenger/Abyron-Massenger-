@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08090d"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="styles.css">
+<title>ABYRON Messenger</title></head><body>
+<div class="app"><aside><div class="brand">ABYRON<small>PRIVATE MESSENGER</small></div>
+<nav><button class="active" data-page="chat">💬 Chat</button><button data-page="groups">👥 Groups</button><button data-page="scheduled">⏱ Scheduled</button><button data-page="nearby">📡 Nearby</button><button data-page="settings">⚙ Settings</button></nav>
+<div class="connection"><i></i><span id="status">Starting</span></div></aside>
+<main><header><b id="title">Chat</b><button id="lock">🔒 Lock</button></header>
+<section id="chat" class="page active"><div class="card hero"><h1>Private by design.</h1><p>ABYRON separates the message layer from the transport layer so Internet and nearby transports can share one encrypted protocol.</p></div>
+<div class="card"><label>Recipient public identity</label><textarea id="peer" placeholder='Paste recipient public-key JSON'></textarea><button id="prepare">Prepare encrypted session</button>
+<div id="messages"></div><form id="send"><input id="message" placeholder="Write a message…"><button>Send</button><button type="button" id="schedule" class="secondary">Schedule</button></form></div></section>
+<section id="groups" class="page"><div class="card"><h2>Groups</h2><form id="newGroup"><input id="groupName" placeholder="Group name"><button>Create</button></form><div id="groupsList"></div></div></section>
+<section id="scheduled" class="page"><div class="card"><h2>Scheduled messages</h2><p class="muted">Ciphertext is stored; plaintext is not sent to the backend.</p><div id="scheduledList"></div></div></section>
+<section id="nearby" class="page"><div class="card"><h2>Nearby / No Internet</h2><p class="muted">Web browsers cannot universally expose Bluetooth + Wi‑Fi Direct mesh. The Android transport module in this package is designed for that layer.</p><button id="discover">Start nearby discovery</button><pre id="nearbyLog"></pre></div></section>
+<section id="settings" class="page"><div class="card"><h2>Identity</h2><textarea id="publicKey" readonly></textarea><button id="copy">Copy public key</button><p class="muted">Verify a contact's identity through a trusted QR/code exchange before treating a key as trusted.</p><hr><button id="wipe" class="danger">Delete local keys and messages</button></div></section>
+</main></div>
+<dialog id="scheduleDialog"><form method="dialog" id="scheduleForm"><h3>Schedule encrypted message</h3><input id="scheduleAt" type="datetime-local" required><div class="actions"><button value="cancel" class="secondary">Cancel</button><button id="confirmSchedule">Schedule</button></div></form></dialog>
+<script src="config.js"></script><script type="module" src="app.js"></script></body></html>
