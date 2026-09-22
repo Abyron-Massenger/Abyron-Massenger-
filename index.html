@@ -1,18 +1,23 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#08090d"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="styles.css">
-<title>ABYRON Messenger</title></head><body>
-<div class="app"><aside><div class="brand">ABYRON<small>PRIVATE MESSENGER</small></div>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#08090d"><meta name="description" content="ABYRON private encrypted messenger"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="styles.css"><title>ABYRON Messenger</title></head>
+<body>
+<div class="app">
+<aside><div class="brand">ABYRON<small>PRIVATE MESSENGER</small></div>
 <nav><button class="active" data-page="chat">💬 Chat</button><button data-page="groups">👥 Groups</button><button data-page="scheduled">⏱ Scheduled</button><button data-page="nearby">📡 Nearby</button><button data-page="settings">⚙ Settings</button></nav>
 <div class="connection"><i></i><span id="status">Starting</span></div></aside>
-<main><header><b id="title">Chat</b><button id="lock">🔒 Lock</button></header>
-<section id="chat" class="page active"><div class="card hero"><h1>Private by design.</h1><p>ABYRON separates the message layer from the transport layer so Internet and nearby transports can share one encrypted protocol.</p></div>
-<div class="card"><label>Recipient public identity</label><textarea id="peer" placeholder='Paste recipient public-key JSON'></textarea><button id="prepare">Prepare encrypted session</button>
-<div id="messages"></div><form id="send"><input id="message" placeholder="Write a message…"><button>Send</button><button type="button" id="schedule" class="secondary">Schedule</button></form></div></section>
-<section id="groups" class="page"><div class="card"><h2>Groups</h2><form id="newGroup"><input id="groupName" placeholder="Group name"><button>Create</button></form><div id="groupsList"></div></div></section>
-<section id="scheduled" class="page"><div class="card"><h2>Scheduled messages</h2><p class="muted">Ciphertext is stored; plaintext is not sent to the backend.</p><div id="scheduledList"></div></div></section>
-<section id="nearby" class="page"><div class="card"><h2>Nearby / No Internet</h2><p class="muted">Web browsers cannot universally expose Bluetooth + Wi‑Fi Direct mesh. The Android transport module in this package is designed for that layer.</p><button id="discover">Start nearby discovery</button><pre id="nearbyLog"></pre></div></section>
-<section id="settings" class="page"><div class="card"><h2>Identity</h2><textarea id="publicKey" readonly></textarea><button id="copy">Copy public key</button><p class="muted">Verify a contact's identity through a trusted QR/code exchange before treating a key as trusted.</p><hr><button id="wipe" class="danger">Delete local keys and messages</button></div></section>
+<main><header><b id="title">Chat</b><div class="header-right"><span id="myUsername" class="pill">Not registered</span><button id="lock">🔒 Lock</button></div></header>
+<section id="chat" class="page active">
+<div class="card hero"><div class="eyebrow">ABYRON PRIVATE MESSENGER</div><h1>Private by design.</h1><p>Find people by their ABYRON username. Your private key stays on this device; messages are encrypted before Supabase receives them.</p></div>
+<div class="card"><label>Find an ABYRON user</label><form id="searchForm"><input id="usernameSearch" autocomplete="off" placeholder="@username"><button>Find</button></form><div id="peerCard" class="peer-card hidden"><div><strong id="peerName">@user</strong><small id="peerDevice"></small></div><span>🔐 E2EE session</span></div></div>
+<div class="card"><div class="chat-head"><div><strong id="chatWith">Conversation</strong><small id="chatHint">Search a username above to start</small></div></div><div id="messages"></div><form id="send"><input id="message" autocomplete="off" placeholder="Write a message…"><button>Send</button><button type="button" id="schedule" class="secondary">Schedule</button></form></div>
+</section>
+<section id="groups" class="page"><div class="card"><h2>Groups</h2><p class="muted">Group transport is scaffolded in this build; individual E2EE is active.</p><form id="newGroup"><input id="groupName" placeholder="Group name"><button>Create</button></form><div id="groupsList"></div></div></section>
+<section id="scheduled" class="page"><div class="card"><h2>Scheduled messages</h2><p class="muted">Messages are encrypted locally and queued on this device until delivery time.</p><div id="scheduledList"></div></div></section>
+<section id="nearby" class="page"><div class="card"><h2>Nearby / No Internet</h2><p class="muted">The web layer cannot universally provide Bluetooth/Wi-Fi mesh. The Android transport module is reserved for that layer.</p><button id="discover">Start nearby discovery</button><pre id="nearbyLog"></pre></div></section>
+<section id="settings" class="page"><div class="card"><h2>Your ABYRON ID</h2><div class="identity-line"><div><strong id="myUsername">Not registered</strong><small id="myDevice">device</small></div><span id="profileStatus" class="profile-status">Create your ABYRON ID</span></div><div class="actions"><button id="copyUsername" class="secondary">Copy username</button><button id="logoutDevice" class="secondary">Change username</button></div><hr><label>Public identity</label><textarea id="publicKey" readonly></textarea><button id="copy">Copy public identity</button><p class="muted">Only the public key is shareable. The private key remains in this browser's local storage.</p><hr><button id="wipe" class="danger">Delete this device identity</button><div class="contact-box"><h3>Known profiles</h3><div id="contactsList"></div></div></div></section>
 </main></div>
+<dialog id="profileDialog"><form id="profileForm"><div class="eyebrow">FIRST TIME SETUP</div><h2>Create your ABYRON ID</h2><p class="muted">Choose a unique username. This browser/device gets its own cryptographic identity.</p><label>Username</label><div class="username-input"><span>@</span><input id="username" required minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" placeholder="yourname" autocomplete="username"></div><p class="hint">3–24 characters · letters, numbers and underscore</p><p id="profileError" class="error"></p><button>Create ABYRON ID</button></form></dialog>
 <dialog id="scheduleDialog"><form method="dialog" id="scheduleForm"><h3>Schedule encrypted message</h3><input id="scheduleAt" type="datetime-local" required><div class="actions"><button value="cancel" class="secondary">Cancel</button><button id="confirmSchedule">Schedule</button></div></form></dialog>
-<script src="config.js"></script><script type="module" src="app.js"></script></body></html>
+<script src="config.js"></script><script type="module" src="app.js"></script>
+</body></html>
